@@ -3,15 +3,17 @@ const cors = require("cors");
 const path = require("path");
 const app = express();
 
-// Render cấp cổng tự động, nếu không có thì dùng 10000
-const port = process.env.PORT || 10000;
+// Sử dụng cổng của Render hoặc 10000
+const PORT = process.env.PORT || 10000;
 
 app.use(cors());
 app.use(express.json());
 
-// Cấu hình để hiển thị giao diện index.html
+// DÒNG QUAN TRỌNG NHẤT: Để hiện giao diện web
+// Nó sẽ tìm các file index.html, style.css, script.js trong cùng thư mục
 app.use(express.static(path.join(__dirname, "./")));
 
+// API xử lý đăng ký
 app.post("/api/register", (req, res) => {
     const { fullName, phone, course } = req.body;
     if (!fullName || !phone || !course) {
@@ -23,9 +25,13 @@ app.post("/api/register", (req, res) => {
     return res.status(200).json({
         message: "Thông tin của bạn đã được gửi thành công!"
     });
-}); // Đã thêm dấu đóng ngoặc } quan trọng ở đây
+});
 
-// Lắng nghe trên 0.0.0.0 để Render có thể quét thấy Port
-app.listen(port, '0.0.0.0', () => {
-    console.log(`Server is running on port ${port}`);
+// Trả về file index.html khi vào trang chủ
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "index.html"));
+});
+
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server is running on port ${PORT}`);
 });
