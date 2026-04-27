@@ -91,16 +91,37 @@ function startCounters() {
     countersStarted = true;
 }
 revealOnScroll();
+
+// ============= XỬ LÝ FORM ĐĂNG KÝ =============
 const mainForm = document.getElementById("mainForm");
 if (mainForm) {
     mainForm.addEventListener("submit", async (e) => {
         e.preventDefault();
+        
+        // Lấy dữ liệu từ form
         const formData = {
-            fullName: mainForm.fullName.value,
-            phone: mainForm.phone.value,
+            fullName: mainForm.fullName.value.trim(),
+            phone: mainForm.phone.value.trim(),
             course: mainForm.course.value
         };
+
+        // Kiểm tra dữ liệu trước khi gửi
+        if (!formData.fullName) {
+            alert("❌ Vui lòng nhập họ và tên");
+            return;
+        }
+        if (!formData.phone) {
+            alert("❌ Vui lòng nhập số điện thoại");
+            return;
+        }
+
+        // Disable nút submit trong khi gửi
+        const submitBtn = mainForm.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.textContent = "⏳ Đang gửi...";
+
         try {
+            // Gửi dữ liệu tới API backend
             const response = await fetch("/api/register", {
                 method: "POST",
                 headers: {
@@ -108,16 +129,24 @@ if (mainForm) {
                 },
                 body: JSON.stringify(formData)
             });
+
+            // Đọc phản hồi từ server
             const result = await response.json();
+
+            // Hiển thị thông báo dựa trên kết quả
             if (response.ok) {
                 alert(result.message);
                 mainForm.reset();
+                // Reset nút về trạng thái ban đầu
+                submitBtn.textContent = "GỬI THÔNG TIN ĐĂNG KÝ HỌC TRẢI NGHIỆM MIỄN PHÍ";
             } else {
-                alert(result.message || "Có lỗi xảy ra.");
+                alert(result.message || "❌ Có lỗi xảy ra. Vui lòng thử lại.");
+                submitBtn.textContent = "GỬI THÔNG TIN ĐĂNG KÝ HỌC TRẢI NGHIỆM MIỄN PHÍ";
             }
         } catch (error) {
-            console.error(error);
-            alert("Không thể kết nối tới server.");
+            console.error("❌ Lỗi kết nối:", error);
+            alert("❌ Không thể kết nối tới server. Vui lòng kiểm tra kết nối mạng.");
+            submitBtn.textContent = "GỬI THÔNG TIN ĐĂNG KÝ HỌC TRẢI NGHIỆM MIỄN PHÍ";
         }
     });
 }
