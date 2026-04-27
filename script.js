@@ -1,3 +1,36 @@
+// Hamburger menu toggle
+const hamburgerBtn = document.getElementById('hamburgerBtn');
+const mobileNav = document.getElementById('mobileNav');
+
+if (hamburgerBtn && mobileNav) {
+    hamburgerBtn.addEventListener('click', () => {
+        hamburgerBtn.classList.toggle('active');
+        mobileNav.classList.toggle('active');
+    });
+    
+    // Close menu when a link is clicked
+    const navLinks = mobileNav.querySelectorAll('a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            hamburgerBtn.classList.remove('active');
+            mobileNav.classList.remove('active');
+        });
+    });
+    
+    // Handle dropdown menus on mobile
+    const mobileDropdowns = mobileNav.querySelectorAll('.dropdown');
+    mobileNav.querySelectorAll('li').forEach(li => {
+        if (li.querySelector('.dropdown')) {
+            li.querySelector('a').addEventListener('click', (e) => {
+                if (window.innerWidth <= 768) {
+                    e.preventDefault();
+                    li.classList.toggle('active');
+                }
+            });
+        }
+    });
+}
+
 function animateNumber(element, endValue, duration) {
     let startValue = 0;
     let step = Math.ceil(endValue / (duration / 10));
