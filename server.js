@@ -27,12 +27,11 @@ app.post("/api/register", (req, res) => {
     });
 });
 
-// Trả về file index.html khi vào trang chủ
-// Trả về file index.html khi vào trang chủ
-app.get("/(.*)", (req, res) => {
+// Trả về file index.html cho tất cả các đường dẫn khác (Fix lỗi Express 5)
+app.use((req, res) => {
     res.sendFile(path.join(__dirname, "index.html"));
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`Server đang chạy tại port ${PORT}`);
 });
