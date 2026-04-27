@@ -103,7 +103,7 @@ async function appendToGoogleSheets(fullName, phone, course) {
 
         const request = {
             spreadsheetId: "1mvCb8wiSpdvJzpojNG21VH-ny9JLP5xCGBhIqzjFywM", // Đã sửa: dùng biến ở trên cùng
-            range: `${SHEET_NAME}!A:D`, // Đã sửa: dùng biến tên sheet
+            range: `${Sheet1}!A:D`, // Đã sửa: dùng biến tên sheet
             valueInputOption: "USER_ENTERED",
             resource: {
                 values: values
