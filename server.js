@@ -8,20 +8,15 @@ const app = express();
 
 // ============= CẤU HÌNH =============
 const PORT = process.env.PORT || 10000;
-const GOOGLE_SHEETS_ID = "YOUR_GOOGLE_SHEETS_ID"; // Thay bằng ID sheet của bạn
-const SHEET_NAME = "ĐăngKý"; // Tên của sheet muốn ghi dữ liệu
+const GOOGLE_SHEETS_ID = "1mvCb8wiSpdvJzpojNG21VH-ny9JLP5xCGBhIqzjFywM"; // Đã điền ID Sheet của bạn
+const SHEET_NAME = "Sheet1"; // LƯU Ý: Tên sheet thường mặc định là "Sheet1" hoặc "Trang tính 1". Hãy sửa cho đúng với tab ở dưới cùng file Excel của bạn nhé!
 
 // ============= CẤU HÌNH EMAIL GMAIL =============
-// BẠN CẦN: Tạo App Password từ Google Account
-// 1. Bật 2-Step Verification trên tài khoản Google
-// 2. Truy cập: myaccount.google.com/apppasswords
-// 3. Tạo "App password" cho "Mail" và "Windows Computer"
-// 4. Copy mật khẩu ứng dụng vào đây
 const EMAIL_CONFIG = {
     service: "gmail",
     auth: {
-        user: "bfcenter2023@gmail.com", // Email của bạn
-        pass: "YOUR_APP_PASSWORD" // App Password (không phải mật khẩu Gmail)
+        user: "tranminhthien", // Đổi thành email đầy đủ của bạn
+        pass: "27092007" // CHÚ Ý: Chỗ này phải là 16 ký tự App Password tạo từ myaccount.google.com
     }
 };
 
@@ -77,7 +72,6 @@ async function sendEmailNotification(fullName, phone, course) {
         return true;
     } catch (error) {
         console.error("❌ Lỗi gửi email:", error.message);
-        // Không dừng quy trình nếu email thất bại
         return false;
     }
 }
@@ -85,17 +79,12 @@ async function sendEmailNotification(fullName, phone, course) {
 // ============= HÀM GHI DỮ LIỆU VÀO GOOGLE SHEETS =============
 async function appendToGoogleSheets(fullName, phone, course) {
     try {
-        // Kiểm tra xem file credentials.json có tồn tại không
         const credentialsPath = path.join(__dirname, "credentials.json");
         if (!fs.existsSync(credentialsPath)) {
-            throw new Error(
-                "❌ Không tìm thấy credentials.json. Vui lòng làm theo hướng dẫn để tạo file này từ Google Cloud Console"
-            );
+            throw new Error("❌ Không tìm thấy credentials.json.");
         }
 
         const credentials = require(credentialsPath);
-
-        // Xác thực Google API
         const auth = new google.auth.GoogleAuth({
             keyFile: credentialsPath,
             scopes: ["https://www.googleapis.com/auth/spreadsheets"]
@@ -103,10 +92,9 @@ async function appendToGoogleSheets(fullName, phone, course) {
 
         const sheets = google.sheets({ version: "v4", auth });
 
-        // Dữ liệu sẽ được ghi: Thời gian, Họ tên, Số điện thoại, Khóa học
         const values = [
             [
-                new Date().toLocaleString('vi-VN'),
+                new Date().toLocaleString('vi-VN', { timeZone: "Asia/Ho_Chi_Minh" }),
                 fullName,
                 phone,
                 course
@@ -114,8 +102,8 @@ async function appendToGoogleSheets(fullName, phone, course) {
         ];
 
         const request = {
-            spreadsheetId: GOOGLE_SHEETS_ID,
-            range: `${SHEET_NAME}!A:D`, // Ghi vào cột A-D
+            spreadsheetId: GOOGLE_SHEETS_ID, // Đã sửa: dùng biến ở trên cùng
+            range: `${SHEET_NAME}!A:D`, // Đã sửa: dùng biến tên sheet
             valueInputOption: "USER_ENTERED",
             resource: {
                 values: values
@@ -123,11 +111,10 @@ async function appendToGoogleSheets(fullName, phone, course) {
         };
 
         const response = await sheets.spreadsheets.values.append(request);
-        console.log("✅ Dữ liệu đã ghi vào Google Sheets:", response.data);
+        console.log("✅ Dữ liệu đã ghi vào Google Sheets thành công.");
         return true;
     } catch (error) {
         console.error("❌ Lỗi ghi Google Sheets:", error.message);
-        // Ghi log lỗi nhưng vẫn trả về thành công cho người dùng
         return false;
     }
 }
@@ -137,7 +124,6 @@ app.post("/api/register", async (req, res) => {
     try {
         const { fullName, phone, course } = req.body;
 
-        // Kiểm tra dữ liệu đầu vào
         if (!fullName || !phone || !course) {
             return res.status(400).json({
                 success: false,
@@ -145,7 +131,6 @@ app.post("/api/register", async (req, res) => {
             });
         }
 
-        // Kiểm tra định dạng số điện thoại (10-11 chữ số)
         if (!/^\d{10,11}$/.test(phone.replace(/[^0-9]/g, ""))) {
             return res.status(400).json({
                 success: false,
@@ -155,13 +140,9 @@ app.post("/api/register", async (req, res) => {
 
         console.log("📋 Nhận yêu cầu đăng ký:", { fullName, phone, course });
 
-        // Gửi email thông báo (không chặn nếu thất bại)
         await sendEmailNotification(fullName, phone, course);
-
-        // Ghi dữ liệu vào Google Sheets (không chặn nếu thất bại)
         await appendToGoogleSheets(fullName, phone, course);
 
-        // Trả về phản hồi thành công
         return res.status(200).json({
             success: true,
             message: "✅ Cảm ơn bạn! Thông tin đã được gửi thành công. Chúng tôi sẽ liên hệ với bạn sớm nhất."
@@ -176,7 +157,6 @@ app.post("/api/register", async (req, res) => {
 });
 
 // ============= ROUTE MẶC ĐỊNH =============
-// Trả file index.html cho tất cả đường dẫn khác
 app.use((req, res) => {
     res.sendFile(path.join(__dirname, "index.html"));
 });
@@ -186,24 +166,8 @@ app.listen(PORT, "0.0.0.0", () => {
     console.log(`
 ╔════════════════════════════════════════════╗
 ║  🎓 NGOẠI NGỮ PHƯƠNG THẢO - Backend        ║
-║  📍 Server đang chạy tại port: ${PORT}    ║
-║  🌐 Truy cập: http://localhost:${PORT}    ║
+║  📍 Server đang chạy tại port: ${PORT}      ║
+║  🌐 Truy cập: http://localhost:${PORT}      ║
 ╚════════════════════════════════════════════╝
-
-⚠️  HƯỚNG DẪN CẤU HÌNH:
-1. CẤU HÌNH EMAIL GMAIL:
-   - Mở https://myaccount.google.com/apppasswords
-   - Bật 2-Step Verification nếu chưa bật
-   - Tạo App Password cho "Mail"
-   - Thay thế YOUR_APP_PASSWORD trong file này
-
-2. CẤU HÌNH GOOGLE SHEETS:
-   - Tải file credentials.json từ Google Cloud Console
-   - Đặt file này cùng thư mục với server.js
-   - Thay thế YOUR_GOOGLE_SHEETS_ID bằng ID sheet thực
-   - Share quyền chỉnh sửa sheet cho email của Service Account
-
-3. CÀI ĐẶT THƯ VIỆN:
-   npm install express cors nodemailer googleapis
     `);
 });
