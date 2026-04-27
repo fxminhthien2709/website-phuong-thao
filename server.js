@@ -28,7 +28,8 @@ app.post("/api/register", (req, res) => {
 });
 
 // Trả về file index.html khi vào trang chủ
-app.get("*", (req, res) => {
+// Trả về file index.html khi vào trang chủ
+app.get("/(.*)", (req, res) => {
     res.sendFile(path.join(__dirname, "index.html"));
 });
 
