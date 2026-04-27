@@ -8,15 +8,15 @@ const app = express();
 
 // ============= CẤU HÌNH =============
 const PORT = process.env.PORT || 10000;
-const GOOGLE_SHEETS_ID = "1mvCb8wiSpdvJzpojNG21VH-ny9JLP5xCGBhIqzjFywM"; // Đã điền ID Sheet của bạn
-const SHEET_NAME = "Sheet1"; // LƯU Ý: Tên sheet thường mặc định là "Sheet1" hoặc "Trang tính 1". Hãy sửa cho đúng với tab ở dưới cùng file Excel của bạn nhé!
+const GOOGLE_SHEETS_ID = "1mvCb8wiSpdvJzpojNG21VH-ny9JLP5xCGBhIqzjFywM"; 
+const SHEET_NAME = "Sheet1"; // Nhớ đổi tên tab ở dưới cùng file Sheet thành Sheet1 nhé
 
 // ============= CẤU HÌNH EMAIL GMAIL =============
 const EMAIL_CONFIG = {
     service: "gmail",
     auth: {
-        user: "tranminhthien", // Đổi thành email đầy đủ của bạn
-        pass: "27092007" // CHÚ Ý: Chỗ này phải là 16 ký tự App Password tạo từ myaccount.google.com
+        user: "tranminhthien@gmail.com", // Đổi thành email của bạn (nếu có đuôi @gmail.com)
+        pass: "xxxx xxxx xxxx xxxx" // ĐIỀN MẬT KHẨU ỨNG DỤNG (16 KÝ TỰ) VÀO ĐÂY
     }
 };
 
@@ -55,14 +55,14 @@ async function sendEmailNotification(fullName, phone, course) {
         </table>
         <p style="color: #666;">Vui lòng kiểm tra thông tin và liên hệ học viên sớm nhất.</p>
         <hr style="border: none; border-top: 1px solid #dee2e6; margin: 20px 0;">
-        <p style="font-size: 12px; color: #999;">Email này được gửi tự động từ hệ thống đăng ký trực tuyến.</p>
+        <p style="font-size: 12px; color: #999;">Email này được gửi tự động từ hệ thống.</p>
     </body>
 </html>
         `;
 
         const mailOptions = {
             from: EMAIL_CONFIG.auth.user,
-            to: "bfcenter2023@gmail.com", // Email nhận thông báo
+            to: "bfcenter2023@gmail.com", 
             subject: `Đơn đăng ký mới từ ${fullName}`,
             html: emailContent
         };
@@ -75,19 +75,16 @@ async function sendEmailNotification(fullName, phone, course) {
         return false;
     }
 }
-// ============= CẤU HÌNH =============
-const GOOGLE_SHEETS_ID = "1mvCb8wiSpdvJzpojNG21VH-ny9JLP5xCGBhIqzjFywM"; // ID của bạn
-const SHEET_NAME = "Sheet1"; // Nhớ đổi tên tab ở dưới file Sheet thành Sheet1 nhé
 
 // ============= HÀM GHI DỮ LIỆU VÀO GOOGLE SHEETS =============
 async function appendToGoogleSheets(fullName, phone, course) {
     try {
         const credentialsPath = path.join(__dirname, "credentials.json");
         if (!fs.existsSync(credentialsPath)) {
-            throw new Error("❌ Không tìm thấy credentials.json.");
+            console.error("❌ Thiếu file credentials.json trên server!");
+            return false;
         }
 
-        const credentials = require(credentialsPath);
         const auth = new google.auth.GoogleAuth({
             keyFile: credentialsPath,
             scopes: ["https://www.googleapis.com/auth/spreadsheets"]
@@ -95,26 +92,22 @@ async function appendToGoogleSheets(fullName, phone, course) {
 
         const sheets = google.sheets({ version: "v4", auth });
 
-        const values = [
-            [
-                new Date().toLocaleString('vi-VN', { timeZone: "Asia/Ho_Chi_Minh" }),
-                fullName,
-                phone,
-                course
-            ]
-        ];
-
         const request = {
-            spreadsheetId: GOOGLE_SHEETS_ID, // Đã sửa: dùng biến ở trên cùng
-            range: `${SHEET_NAME}!A:D`, // Đã sửa: dùng biến tên sheet
+            spreadsheetId: GOOGLE_SHEETS_ID,
+            range: `${SHEET_NAME}!A:D`, 
             valueInputOption: "USER_ENTERED",
             resource: {
-                values: values
+                values: [[
+                    new Date().toLocaleString('vi-VN', { timeZone: "Asia/Ho_Chi_Minh" }),
+                    fullName,
+                    phone,
+                    course
+                ]]
             }
         };
 
-        const response = await sheets.spreadsheets.values.append(request);
-        console.log("✅ Dữ liệu đã ghi vào Google Sheets thành công.");
+        await sheets.spreadsheets.values.append(request);
+        console.log("✅ Dữ liệu đã ghi vào Google Sheets thành công!");
         return true;
     } catch (error) {
         console.error("❌ Lỗi ghi Google Sheets:", error.message);
@@ -170,7 +163,6 @@ app.listen(PORT, "0.0.0.0", () => {
 ╔════════════════════════════════════════════╗
 ║  🎓 NGOẠI NGỮ PHƯƠNG THẢO - Backend        ║
 ║  📍 Server đang chạy tại port: ${PORT}      ║
-║  🌐 Truy cập: http://localhost:${PORT}      ║
 ╚════════════════════════════════════════════╝
     `);
 });
