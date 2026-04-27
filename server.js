@@ -75,7 +75,7 @@ async function sendEmailNotification(fullName, phone, course) {
         return false;
     }
 }
-/ ============= CẤU HÌNH =============
+// ============= CẤU HÌNH =============
 const GOOGLE_SHEETS_ID = "1mvCb8wiSpdvJzpojNG21VH-ny9JLP5xCGBhIqzjFywM"; // ID của bạn
 const SHEET_NAME = "Sheet1"; // Nhớ đổi tên tab ở dưới file Sheet thành Sheet1 nhé
 
