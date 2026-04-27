@@ -75,6 +75,9 @@ async function sendEmailNotification(fullName, phone, course) {
         return false;
     }
 }
+/ ============= CẤU HÌNH =============
+const GOOGLE_SHEETS_ID = "1mvCb8wiSpdvJzpojNG21VH-ny9JLP5xCGBhIqzjFywM"; // ID của bạn
+const SHEET_NAME = "Sheet1"; // Nhớ đổi tên tab ở dưới file Sheet thành Sheet1 nhé
 
 // ============= HÀM GHI DỮ LIỆU VÀO GOOGLE SHEETS =============
 async function appendToGoogleSheets(fullName, phone, course) {
@@ -102,8 +105,8 @@ async function appendToGoogleSheets(fullName, phone, course) {
         ];
 
         const request = {
-            spreadsheetId: "1mvCb8wiSpdvJzpojNG21VH-ny9JLP5xCGBhIqzjFywM", // Đã sửa: dùng biến ở trên cùng
-            range: `${Sheet1}!A:D`, // Đã sửa: dùng biến tên sheet
+            spreadsheetId: GOOGLE_SHEETS_ID, // Đã sửa: dùng biến ở trên cùng
+            range: `${SHEET_NAME}!A:D`, // Đã sửa: dùng biến tên sheet
             valueInputOption: "USER_ENTERED",
             resource: {
                 values: values
