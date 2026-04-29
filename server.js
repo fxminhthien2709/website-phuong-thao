@@ -152,6 +152,15 @@ app.post("/api/register", async (req, res) => {
     }
 });
 
+// ============= ROUTES ĐĂNG NHẬP & DASHBOARD HỌC TẬP =============
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, 'login.html'));
+});
+
+app.get('/learning', (req, res) => {
+    res.sendFile(path.join(__dirname, 'learning.html'));
+});
+
 // ============= ROUTE MẶC ĐỊNH =============
 app.use((req, res) => {
     res.sendFile(path.join(__dirname, "index.html"));

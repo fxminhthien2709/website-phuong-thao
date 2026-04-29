@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bảng Điều Khiển Học Tập - Ngoại Ngữ Phương Thảo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --primary: #d32f2f;
+            --primary-dark: #9a0007;
+            --secondary: #002e5b;
+            --accent: #ffb300;
+            --white: #ffffff;
+            --black: #1a1a1a;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-600: #6c757d;
+            --gray-800: #343a40;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: var(--gray-100);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 250px;
+            background: var(--secondary);
+            color: white;
+            padding: 20px 0;
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .sidebar-header h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .sidebar-menu {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            padding: 0 10px;
+        }
+
+        .menu-item {
+            padding: 15px 20px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: none;
+            background: none;
+            font-size: 15px;
+            font-weight: 500;
+            width: 100%;
+        }
+
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .menu-item.active {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logout-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            text-transform: uppercase;
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+
+        .logout-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(211, 47, 47, 0.3);
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            margin-left: 250px;
+            flex: 1;
+            padding: 30px;
+        }
+
+        .content-header {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .content-header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 32px;
+            color: var(--secondary);
+            margin: 0;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-info p {
+            margin: 0;
+            color: var(--gray-600);
+            font-size: 14px;
+        }
+
+        .user-name {
+            font-weight: 700;
+            color: var(--secondary);
+            font-size: 16px;
+        }
+
+        /* COURSE GRID */
+        .courses-section h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 24px;
+            color: var(--secondary);
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .course-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: var(--transition);
+        }
+
+        .course-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .course-thumbnail {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .course-thumbnail.thumbnail-2 {
+            background: linear-gradient(135deg, var(--secondary) 0%, #00508f 100%);
+        }
+
+        .course-thumbnail.thumbnail-3 {
+            background: linear-gradient(135deg, var(--accent) 0%, #ff9800 100%);
+        }
+
+        .course-content {
+            padding: 20px;
+        }
+
+        .course-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 12px;
+        }
+
+        .course-progress-label {
+            font-size: 13px;
+            color: var(--gray-600);
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .progress-percentage {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--gray-200);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 4px;
+            transition: width 0.6s ease;
+        }
+
+        .course-footer {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-enter {
+            flex: 1;
+            padding: 10px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            text-transform: uppercase;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-enter:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+
+            .main-content {
+                margin-left: 200px;
+                padding: 20px;
+            }
+
+            .content-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .content-header h1 {
+                font-size: 26px;
+            }
+
+            .courses-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 15px;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            .sidebar-header {
+                padding: 0;
+                border: none;
+                margin: 0;
+                flex: 1;
+            }
+
+            .sidebar-header h2 {
+                font-size: 16px;
+            }
+
+            .sidebar-menu {
+                display: none;
+            }
+
+            .sidebar-footer {
+                padding: 0;
+                border: none;
+            }
+
+            .logout-btn {
+                padding: 8px 15px;
+                font-size: 12px;
+                width: auto;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+            }
+
+            .content-header h1 {
+                font-size: 22px;
+            }
+
+            .courses-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>📚 Học Tập</h2>
+        </div>
+
+        <nav class="sidebar-menu">
+            <a href="#" class="menu-item active" onclick="navigateTo('dashboard')">
+                <span>📊</span> Bảng Điều Khiển
+            </a>
+            <a href="#" class="menu-item" onclick="navigateTo('mycourses')">
+                <span>📖</span> Khóa Học Của Tôi
+            </a>
+            <a href="#" class="menu-item" onclick="navigateTo('practice')">
+                <span>✏️</span> Luyện Thi Online
+            </a>
+            <a href="#" class="menu-item" onclick="navigateTo('library')">
+                <span>📄</span> Kho Tài Liệu PDF
+            </a>
+            <a href="#" class="menu-item" onclick="navigateTo('support')">
+                <span>💬</span> Hỗ Trợ Học Tập
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="logout-btn" onclick="logout()">Đăng Xuất</button>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <div class="content-header">
+            <h1>📚 Xin chào, Học viên!</h1>
+            <div class="user-info">
+                <p>Đã đăng nhập lúc <span id="currentTime"></span></p>
+                <p class="user-name" id="usernameDisplay">hocvien</p>
+            </div>
+        </div>
+
+        <section class="courses-section">
+            <h2>🎯 Các Khóa Học Của Bạn</h2>
+            <div class="courses-grid">
+                <!-- Course 1 -->
+                <div class="course-card">
+                    <div class="course-thumbnail">
+                        Tiếng Anh Mầm Non
+                    </div>
+                    <div class="course-content">
+                        <h3 class="course-title">Tiếng Anh Mầm Non</h3>
+                        <div class="course-progress-label">
+                            <span>Tiến độ học tập</span>
+                            <span class="progress-percentage">65%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 65%;"></div>
+                        </div>
+                        <div class="course-footer">
+                            <button class="btn-enter" onclick="enterCourse('Tiếng Anh Mầm Non')">Vào Học</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Course 2 -->
+                <div class="course-card">
+                    <div class="course-thumbnail thumbnail-2">
+                        Tiếng Anh Bồi Dưỡng
+                    </div>
+                    <div class="course-content">
+                        <h3 class="course-title">Tiếng Anh Bồi Dưỡng</h3>
+                        <div class="course-progress-label">
+                            <span>Tiến độ học tập</span>
+                            <span class="progress-percentage">45%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 45%;"></div>
+                        </div>
+                        <div class="course-footer">
+                            <button class="btn-enter" onclick="enterCourse('Tiếng Anh Bồi Dưỡng')">Vào Học</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Course 3 -->
+                <div class="course-card">
+                    <div class="course-thumbnail thumbnail-3">
+                        Tiếng Anh Phản Xạ
+                    </div>
+                    <div class="course-content">
+                        <h3 class="course-title">Tiếng Anh Phản Xạ</h3>
+                        <div class="course-progress-label">
+                            <span>Tiến độ học tập</span>
+                            <span class="progress-percentage">80%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 80%;"></div>
+                        </div>
+                        <div class="course-footer">
+                            <button class="btn-enter" onclick="enterCourse('Tiếng Anh Phản Xạ')">Vào Học</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // ============= KIỂM TRA BẢO MẬT =============
+        // Kiểm tra ngay khi load trang nếu người dùng đã đăng nhập
+        if (localStorage.getItem('isLoggedIn') !== 'true') {
+            // Chuyển hướng về trang đăng nhập nếu chưa đăng nhập
+            window.location.href = '/login';
+        }
+
+        // ============= HIỂN THỊ THÔNG TIN NGƯỜI DÙNG =============
+        document.addEventListener('DOMContentLoaded', function() {
+            const username = localStorage.getItem('username') || 'Học viên';
+            document.getElementById('usernameDisplay').textContent = username;
+
+            // Hiển thị thời gian hiện tại
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('vi-VN', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('currentTime').textContent = timeString;
+        });
+
+        // ============= HÀM ĐIỀU HƯỚNG MENU =============
+        function navigateTo(page) {
+            event.preventDefault();
+            
+            // Cập nhật trạng thái active
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.closest('.menu-item').classList.add('active');
+
+            // Alert (tạm thời, có thể thay bằng API sau)
+            alert(`📍 Bạn đang xem: ${page}`);
+        }
+
+        // ============= HÀM VÀO HỌC =============
+        function enterCourse(courseName) {
+            alert(`🚀 Bắt đầu học khóa: ${courseName}\n\nTính năng này sẽ được phát triển thêm.`);
+        }
+
+        // ============= HÀM ĐĂNG XUẤT =============
+        function logout() {
+            if (confirm('Bạn có chắc muốn đăng xuất không?')) {
+                // Xóa thông tin đăng nhập khỏi localStorage
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('username');
+                // Chuyển hướng về trang đăng nhập
+                window.location.href = '/login';
+            }
+        }
+    </script>
+</body>
+</html>
