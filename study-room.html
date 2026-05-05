@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phòng Tự Học - Ngoại Ngữ Phương Thảo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #d32f2f;
+            --primary-dark: #9a0007;
+            --secondary: #002e5b;
+            --accent: #ffb300;
+            --white: #ffffff;
+            --black: #1a1a1a;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-600: #6c757d;
+            --gray-800: #343a40;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: var(--gray-100);
+            min-height: 100vh;
+        }
+
+        /* HEADER */
+        .study-header {
+            background: white;
+            padding: 20px 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-left h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 24px;
+            color: var(--secondary);
+            font-weight: 700;
+        }
+
+        .course-badge {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .btn-back {
+            background: var(--gray-200);
+            color: var(--gray-800);
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            font-size: 14px;
+        }
+
+        .btn-back:hover {
+            background: var(--gray-300);
+        }
+
+        /* MAIN CONTAINER */
+        .study-container {
+            display: flex;
+            height: calc(100vh - 70px);
+            gap: 0;
+        }
+
+        /* LESSON SIDEBAR */
+        .lessons-sidebar {
+            width: 300px;
+            background: white;
+            overflow-y: auto;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.08);
+            border-right: 1px solid var(--gray-200);
+        }
+
+        .lessons-title {
+            padding: 20px;
+            background: var(--secondary);
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        /* ACCORDION */
+        .accordion-item {
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .accordion-header {
+            padding: 16px 20px;
+            background: white;
+            border: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: var(--transition);
+            font-weight: 600;
+            color: var(--secondary);
+            font-size: 15px;
+        }
+
+        .accordion-header:hover {
+            background: var(--gray-100);
+            color: var(--primary);
+        }
+
+        .accordion-header.active {
+            background: rgba(211, 47, 47, 0.1);
+            color: var(--primary);
+        }
+
+        .accordion-toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            transition: var(--transition);
+        }
+
+        .accordion-header.active .accordion-toggle {
+            transform: rotate(90deg);
+        }
+
+        .accordion-content {
+            display: none;
+            background: var(--gray-100);
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .accordion-content.active {
+            display: block;
+            max-height: 1000px;
+        }
+
+        .lesson-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .lesson-item {
+            padding: 12px 20px;
+            padding-left: 40px;
+            cursor: pointer;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+            font-size: 14px;
+            color: var(--gray-800);
+        }
+
+        .lesson-item:hover {
+            background: white;
+            color: var(--primary);
+            border-left-color: var(--primary);
+            padding-left: 35px;
+        }
+
+        .lesson-item.active {
+            background: white;
+            color: var(--primary);
+            border-left-color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* CONTENT AREA */
+        .study-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .video-container {
+            background: var(--black);
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            gap: 15px;
+        }
+
+        .video-placeholder-icon {
+            font-size: 80px;
+            opacity: 0.5;
+        }
+
+        .video-placeholder p {
+            font-size: 18px;
+            opacity: 0.7;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* LESSON INFO */
+        .lesson-info {
+            padding: 30px;
+            background: white;
+            overflow-y: auto;
+            max-height: 300px;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .lesson-info h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 20px;
+            color: var(--secondary);
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .lesson-info p {
+            color: var(--gray-800);
+            line-height: 1.6;
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+
+        .lesson-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .tag {
+            background: rgba(211, 47, 47, 0.1);
+            color: var(--primary);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .lessons-sidebar {
+                width: 250px;
+            }
+
+            .lesson-info {
+                max-height: 250px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .study-container {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .lessons-sidebar {
+                width: 100%;
+                max-height: 200px;
+                border-right: none;
+                border-bottom: 1px solid var(--gray-200);
+            }
+
+            .study-content {
+                height: auto;
+            }
+
+            .video-container {
+                min-height: 300px;
+            }
+
+            .lesson-info {
+                max-height: none;
+            }
+
+            .header-left {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .header-left h1 {
+                font-size: 20px;
+            }
+
+            .study-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            .header-right {
+                width: 100%;
+                justify-content: flex-start;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .study-header {
+                padding: 15px 20px;
+            }
+
+            .header-left h1 {
+                font-size: 18px;
+            }
+
+            .course-badge {
+                font-size: 12px;
+                padding: 6px 10px;
+            }
+
+            .lessons-sidebar {
+                max-height: 150px;
+            }
+
+            .video-container {
+                min-height: 200px;
+            }
+
+            .lesson-info {
+                padding: 20px;
+            }
+        }
+
+        /* SCROLLBAR */
+        .lessons-sidebar::-webkit-scrollbar,
+        .lesson-info::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .lessons-sidebar::-webkit-scrollbar-track,
+        .lesson-info::-webkit-scrollbar-track {
+            background: var(--gray-100);
+        }
+
+        .lessons-sidebar::-webkit-scrollbar-thumb,
+        .lesson-info::-webkit-scrollbar-thumb {
+            background: var(--gray-300);
+            border-radius: 4px;
+        }
+
+        .lessons-sidebar::-webkit-scrollbar-thumb:hover,
+        .lesson-info::-webkit-scrollbar-thumb:hover {
+            background: var(--gray-600);
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <div class="study-header">
+        <div class="header-left">
+            <h1>🎓 Phòng Tự Học</h1>
+            <div class="course-badge" id="courseBadge">Tiếng Anh Mầm Non</div>
+        </div>
+        <div class="header-right">
+            <button class="btn-back" onclick="goBack()">⬅️ Quay Lại</button>
+        </div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="study-container">
+        <!-- LESSONS SIDEBAR -->
+        <div class="lessons-sidebar">
+            <div class="lessons-title">📖 Danh Sách Bài Học</div>
+            <div id="lessonsAccordion"></div>
+        </div>
+
+        <!-- CONTENT AREA -->
+        <div class="study-content">
+            <!-- VIDEO -->
+            <div class="video-container" id="videoContainer">
+                <div class="video-placeholder">
+                    <div class="video-placeholder-icon">🎥</div>
+                    <p>Chọn một bài học để bắt đầu</p>
+                </div>
+            </div>
+
+            <!-- LESSON INFO -->
+            <div class="lesson-info">
+                <h3 id="lessonTitle">Chào Mừng</h3>
+                <p id="lessonDescription">Vui lòng chọn một bài học từ danh sách bên trái để bắt đầu học tập.</p>
+                <div class="lesson-tags" id="lessonTags"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============= KIỂM TRA BẢO MẬT =============
+        if (localStorage.getItem('isLoggedIn') !== 'true') {
+            window.location.href = '/login';
+        }
+
+        // ============= DANH SÁCH BÀI HỌC =============
+        const lessonsData = [
+            {
+                id: 'unit1',
+                title: 'Unit 1: Giới Thiệu Cơ Bản',
+                lessons: [
+                    {
+                        id: 'lesson1-1',
+                        title: 'Bài 1: Hướng Dẫn Cách Học',
+                        description: 'Tìm hiểu về cách sử dụng phòng học trực tuyến và các tính năng có sẵn.',
+                        tags: ['Cơ bản', 'Hướng dẫn'],
+                        videoUrl: ''
+                    },
+                    {
+                        id: 'lesson1-2',
+                        title: 'Bài 2: Giới Thiệu Các Âm Tiếng Anh',
+                        description: 'Học các âm cơ bản trong tiếng Anh, cách phát âm đúng và luyện tập.',
+                        tags: ['Phát âm', 'Cơ bản'],
+                        videoUrl: ''
+                    },
+                    {
+                        id: 'lesson1-3',
+                        title: 'Bài 3: Các Con Số Từ 1-10',
+                        description: 'Tìm hiểu các con số từ 1 đến 10, cách đọc và viết.',
+                        tags: ['Từ vựng', 'Số'],
+                        videoUrl: ''
+                    }
+                ]
+            },
+            {
+                id: 'unit2',
+                title: 'Unit 2: Chào Hỏi',
+                lessons: [
+                    {
+                        id: 'lesson2-1',
+                        title: 'Bài 4: Lời Chào Hàng Ngày',
+                        description: 'Học các cách chào hỏi phổ biến như Hello, Hi, Good morning, etc.',
+                        tags: ['Giao tiếp', 'Chào hỏi'],
+                        videoUrl: ''
+                    },
+                    {
+                        id: 'lesson2-2',
+                        title: 'Bài 5: Hỏi Tên',
+                        description: 'Cách hỏi và trả lời tên trong tiếng Anh với các cách diễn đạt khác nhau.',
+                        tags: ['Giao tiếp', 'Hội thoại'],
+                        videoUrl: ''
+                    }
+                ]
+            },
+            {
+                id: 'unit3',
+                title: 'Unit 3: Giới Thiệu Bản Thân',
+                lessons: [
+                    {
+                        id: 'lesson3-1',
+                        title: 'Bài 6: Giới Thiệu Tên Tuổi',
+                        description: 'Học cách giới thiệu bản thân với tên, tuổi và quê quán.',
+                        tags: ['Giao tiếp', 'Giới thiệu'],
+                        videoUrl: ''
+                    },
+                    {
+                        id: 'lesson3-2',
+                        title: 'Bài 7: Giới Thiệu Gia Đình',
+                        description: 'Cách nói về các thành viên gia đình và mô tả mối quan hệ.',
+                        tags: ['Từ vựng', 'Gia đình'],
+                        videoUrl: ''
+                    },
+                    {
+                        id: 'lesson3-3',
+                        title: 'Bài 8: Sở Thích Cá Nhân',
+                        description: 'Học cách nói về sở thích, kỹ năng và những thứ bạn thích làm.',
+                        tags: ['Giao tiếp', 'Sở thích'],
+                        videoUrl: ''
+                    }
+                ]
+            }
+        ];
+
+        // ============= HIỂN THỊ DANH SÁCH BÀI HỌC =============
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentCourse = localStorage.getItem('currentCourse') || 'Tiếng Anh Mầm Non';
+            document.getElementById('courseBadge').textContent = currentCourse;
+
+            renderLessons();
+        });
+
+        function renderLessons() {
+            const accordion = document.getElementById('lessonsAccordion');
+            accordion.innerHTML = '';
+
+            lessonsData.forEach(unit => {
+                const unitDiv = document.createElement('div');
+                unitDiv.className = 'accordion-item';
+                unitDiv.innerHTML = `
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        ${unit.title}
+                        <span class="accordion-toggle">▶</span>
+                    </button>
+                    <div class="accordion-content">
+                        <ul class="lesson-list">
+                            ${unit.lessons.map(lesson => `
+                                <li class="lesson-item" onclick="selectLesson(event, '${lesson.id}')">
+                                    ${lesson.title}
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                `;
+                accordion.appendChild(unitDiv);
+            });
+        }
+
+        // ============= TOGGLE ACCORDION =============
+        function toggleAccordion(header) {
+            const content = header.nextElementSibling;
+            const wasActive = header.classList.contains('active');
+
+            // Đóng tất cả accordion khác
+            document.querySelectorAll('.accordion-header').forEach(h => {
+                h.classList.remove('active');
+                h.nextElementSibling.classList.remove('active');
+            });
+
+            // Mở accordion hiện tại nếu chưa mở
+            if (!wasActive) {
+                header.classList.add('active');
+                content.classList.add('active');
+            }
+        }
+
+        // ============= CHỌN BÀI HỌC =============
+        function selectLesson(event, lessonId) {
+            // Tìm bài học
+            let selectedLesson = null;
+            lessonsData.forEach(unit => {
+                unit.lessons.forEach(lesson => {
+                    if (lesson.id === lessonId) {
+                        selectedLesson = lesson;
+                    }
+                });
+            });
+
+            if (!selectedLesson) return;
+
+            // Cập nhật giao diện
+            document.querySelectorAll('.lesson-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Cập nhật nội dung bài học
+            document.getElementById('lessonTitle').textContent = selectedLesson.title;
+            document.getElementById('lessonDescription').textContent = selectedLesson.description;
+
+            // Cập nhật tags
+            const tagsContainer = document.getElementById('lessonTags');
+            tagsContainer.innerHTML = selectedLesson.tags.map(tag => 
+                `<span class="tag">${tag}</span>`
+            ).join('');
+
+            // Cập nhật video
+            const videoContainer = document.getElementById('videoContainer');
+            if (selectedLesson.videoUrl) {
+                videoContainer.innerHTML = `<video controls><source src="${selectedLesson.videoUrl}" type="video/mp4"></video>`;
+            } else {
+                videoContainer.innerHTML = `
+                    <div class="video-placeholder">
+                        <div class="video-placeholder-icon">🎥</div>
+                        <p>Video bài học sẽ sớm có sẵn</p>
+                    </div>
+                `;
+            }
+
+            // Lưu bài học hiện tại
+            localStorage.setItem('currentLesson', lessonId);
+        }
+
+        // ============= QUAY LẠI =============
+        function goBack() {
+            if (confirm('Bạn có chắc muốn quay lại? Tiến độ học tập sẽ được lưu.')) {
+                localStorage.removeItem('currentCourse');
+                localStorage.removeItem('currentLesson');
+                window.location.href = 'learning.html';
+            }
+        }
+    </script>
+</body>
+</html>
